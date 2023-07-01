@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: testtest
+    url: jdbc:mysql://localhost:3306/search_engine?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&character_set_server=utf8mb4
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+connect-settings:
+  userAgent: Mozilla/5.0 (Windows; U; WindowsNT5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6
+  referer: http://www.google.com
+
+search-settings:
+  # выводит список найденных страниц отсортированных
+  # если true - по Абсолютной релевантности
+  # если false - по Относительной релевантности
+  sortByAbsoluteRelevance: true
+
+  # если true - то берет только первую нормальную форму слова в качестве леммы для поиска
+  # если false - то берет все нормальные формы слова в качестве леммы для поиска - в этом варианте,
+  # при поиске по одному слову, имеющим несколько нормальных форм (например "абсолютный" - имеет 2 формы "абсолютный" и "абсолютно"
+  # и если на сайте на странице встречается только 1 форма слова, то согласно ТЗ стр.25, результат поиска будет нулевой
+  onlyFirstNormalWord: true
+
+  # процент для исключения из полученного списка леммы, которые встречаются на
+  # слишком большом количестве страниц (согласно ТЗ стр.25)
+  percentFilteredLemmas: 75
+
+
+indexing-settings:
+  sites:
+     - url: https://ipfran.ru
+       name: ipfran.ru
+     - url: https://www.lutherancathedral.ru
+       name: Lutherancathedral.ru
+     - url: https://www.playback.ru
+       name: PlayBack.Ru
+     - url: https://www.svetlovka.ru
+       name: svetlovka.ru

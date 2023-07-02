@@ -45,7 +45,7 @@ public class SiteIndexing implements Runnable {
             return;
         }
         SiteDB siteDB = null;
-        String path = "", comment = "";
+        String path = "", comment;
         if (onlyPage) {
             comment = "Page " + url;
             char ch = '/';
@@ -66,10 +66,10 @@ public class SiteIndexing implements Runnable {
             return;
         }
         siteDB = initSiteDB(mainUrl, siteDB);
-        List<PageDto> pageDtoList = null;
+        List<PageDto> pageDtoList;
         try {
             pageDtoList = getPageDtoList();
-            saveToBase(pageDtoList, siteDB, SiteStatusEnum.INDEXING);
+            saveToBase(pageDtoList, siteDB, SiteStatusEnum.INDEXED);
         } catch (InterruptedException e) {
             //       e.printStackTrace();
             if (!IndexingServiceImpl.isStopped) {
@@ -78,7 +78,7 @@ public class SiteIndexing implements Runnable {
             Thread.currentThread().interrupt();
             // throw new RuntimeException(e);
         }
-        List<LemmaDB> lemmaDBList = null;
+        List<LemmaDB> lemmaDBList;
         if (onlyPage) {
             lemmaDBList = parsingLemmasOfPage(siteDB, getPageFromDB(siteDB, path));
         } else {
@@ -205,8 +205,8 @@ public class SiteIndexing implements Runnable {
             pageRepository.saveAll(pageList);
             pageRepository.flush();
             updateStatusSite(siteDB, newStatus);
-            if (newStatus != SiteStatusEnum.INDEXING) {
-                System.out.println(siteDB.getName() + " - Site & Pages saved in DB in  " + (System.currentTimeMillis() - IndexingServiceImpl.startTime) / 1000 + " сек");
+            if (newStatus == SiteStatusEnum.INDEXED) {
+                System.out.println(siteDB.getName() + " - Site & Pages saved in DB in  " + (System.currentTimeMillis() - IndexingServiceImpl.startTime) / 1000 + " s");
             }
         } else {
             throw new InterruptedException();

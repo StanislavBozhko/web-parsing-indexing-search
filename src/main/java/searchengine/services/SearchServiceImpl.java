@@ -15,7 +15,6 @@ import searchengine.repositories.SiteRepository;
 import java.io.IOException;
 import java.util.*;
 
-
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
@@ -25,9 +24,7 @@ public class SearchServiceImpl implements SearchService {
     private final LemmaRepository lemmaRepository;
     private final IndexRepository indexRepository;
     private final SearchProperties searchProperties;
-
     private LemmaAnalyzer lemmaAnalyzer;
-
 
     @Override
     public SearchResponse allSiteSearch(String text, int offset, int limit) {
@@ -58,7 +55,6 @@ public class SearchServiceImpl implements SearchService {
 
         searchDtoList.sort((s1, s2) -> Float.compare(s2.getRelevance(), s1.getRelevance()));
         searchResults = prepareDataForWeb(searchDtoList, offset, limit);
-
         System.out.println("Finished searching!");
         searchResponse.setCount(searchDtoList.size());
         searchResponse.setData(searchResults);
@@ -138,8 +134,7 @@ public class SearchServiceImpl implements SearchService {
         indexRepository.flush();
         List<IndexDB> indexDBList = indexRepository.findByLemmasAndPages(lemmaDBList, pageDBList);
         List<Map.Entry<PageDB, Float>> pageDBSortByRelatRelevance = getPagesRelatRelevance(pageDBList, indexDBList);
-        List<SearchDto> searchData = getSearchData(pageDBSortByRelatRelevance, lemmaStringList);
-        return searchData;
+        return getSearchData(pageDBSortByRelatRelevance, lemmaStringList);
     }
 
     private List<SearchDto> getSearchData(List<Map.Entry<PageDB, Float>> sortedMapEntry, List<String> lemmaStringList) { // List<String> lemmaStringList
@@ -197,19 +192,13 @@ public class SearchServiceImpl implements SearchService {
 
     private String getBoldWordsByIndex(int begin, int end, String text) {
         String word;
-        try {
             if (end > begin) {
                 word = text.substring(begin, end);
             } else {
                 word = text.substring(begin);
             }
-        }catch (Exception e) {
-            return "";
-        }
-
         int prevP;
         int lastP;
-
         if (text.lastIndexOf(" ", begin) != -1) {
             prevP = text.lastIndexOf(" ", begin);
         } else prevP = begin;
@@ -222,9 +211,7 @@ public class SearchServiceImpl implements SearchService {
         } else {
             textNew = text.substring(prevP);
         }
-
         textNew = textNew.replace(word, "<b>" + word + "</b>");
-
         return textNew;
     }
 

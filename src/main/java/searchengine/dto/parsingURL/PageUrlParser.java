@@ -21,11 +21,8 @@ public class PageUrlParser extends RecursiveTask<List<PageDto>> {
     private final Vector<PageDto> pageDtoList;
     private final String mainUrl;
     private final boolean onlyPage;
-
     private final SiteIndexing siteIndexing;
-
     private final ConnectSettings connectSettings;
-
     private static final String KEY_HREF = "href";
     private static final String CSSQUERY_HREF = "a[href]";
 

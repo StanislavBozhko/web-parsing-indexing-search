@@ -67,15 +67,10 @@ public class LemmaAnalyzer {
         return lemmas;
     }
 
-    /**
-     * @param text текст из которого собираем все леммы
-     * @return набор уникальных лемм найденных в тексте
-     */
-    public Set<String> getLemmaSet(String text, boolean onlyFirstNormalWord) {
+   public Set<String> getLemmaSet(String text, boolean onlyFirstNormalWord) {
         String[] textArray = arrayContainsRussianWords(text);
         Set<String> lemmaSet = new HashSet<>();
-        HashMap<String, String> lemmaMap = new HashMap<>();
-        for (String word : textArray) {
+       for (String word : textArray) {
             if (word.length() > 2 && isCorrectWordForm(word)) {
                 List<String> wordBaseForms = luceneMorphology.getMorphInfo(word);
                 if (anyWordBaseBelongToParticle(wordBaseForms)) {

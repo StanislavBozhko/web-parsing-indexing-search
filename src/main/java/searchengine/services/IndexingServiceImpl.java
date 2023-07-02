@@ -30,28 +30,23 @@ public class IndexingServiceImpl implements IndexingService {
     private final SitesList sites;
     private ExecutorService executorService;
     private static final int coreCount = Runtime.getRuntime().availableProcessors();
-
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
     private final LemmaParser lemmaParser;
-
     private final IndexRepository indexRepository;
     private final IndexParser indexParser;
     private final SitesList sitesList;
     private final ConnectSettings connectSettings;
-
     public static volatile boolean isStopped = false;
     public static long startTime;
 
     @Override
     public ResponseBoolean startIndexing() {
-
         if (isIndexing()) {
             return new ResponseWithMsg(false, "Индексация уже запущена");
         }
         isStopped = false;
-
         startTime = System.currentTimeMillis();
         List<Site> siteList = sites.getSites();
         executorService = Executors.newFixedThreadPool(coreCount);
@@ -62,7 +57,8 @@ public class IndexingServiceImpl implements IndexingService {
                 System.out.println("Delete from Database site " + url);
                 siteRepository.delete(siteDB);
             }
-            executorService.submit(new SiteIndexing(siteRepository, pageRepository, url, sitesList, false, lemmaRepository, lemmaParser, indexRepository, indexParser, connectSettings));
+            executorService.submit(new SiteIndexing(siteRepository, pageRepository, url, sitesList, false,
+                    lemmaRepository, lemmaParser, indexRepository, indexParser, connectSettings));
         }
         executorService.shutdown();
         return new ResponseBoolean(true);
@@ -88,7 +84,8 @@ public class IndexingServiceImpl implements IndexingService {
             System.out.println("Start indexing page url - " + url);
             startTime = System.currentTimeMillis();
             executorService = Executors.newFixedThreadPool(coreCount);
-            executorService.submit(new SiteIndexing(siteRepository, pageRepository, url, sitesList, true, lemmaRepository, lemmaParser, indexRepository, indexParser, connectSettings));
+            executorService.submit(new SiteIndexing(siteRepository, pageRepository, url, sitesList, true,
+                    lemmaRepository, lemmaParser, indexRepository, indexParser, connectSettings));
             executorService.shutdown();
             return true;
         }
